@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 import retrofit2.http.GET
 
-
+private val Adapter by lazy {Adapter()}
 
 class MainActivity : AppCompatActivity() {
     lateinit var search : Button
@@ -24,10 +24,10 @@ class MainActivity : AppCompatActivity() {
         search.setOnClickListener() {
             changeToSearch(it)
         }
-        saved = findViewById(R.id.savedRecipesButton)
-        saved.setOnClickListener() {
-            changeToSaved(it)
-        }
+//        saved = findViewById(R.id.savedRecipesButton)
+//        saved.setOnClickListener() {
+//            changeToSaved(it)
+//        }
 
 
 
@@ -40,10 +40,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun changeToSaved(it: View?) {
-        val intent = Intent(this, SavedActivity::class.java)
-        startActivity(intent)
-    }
+//    private fun changeToSaved(it: View?) {
+//        val intent = Intent(this, SavedActivity::class.java)
+//        startActivity(intent)
+//    }
 
     private fun changeToSearch(button: View) {
         val intent = Intent(this, SearchActivity::class.java)

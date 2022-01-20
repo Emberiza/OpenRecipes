@@ -4,7 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/AndroidStudioProjects/OpenRecipes/app/src/main/res/layout/activity_main.xml" value="0.274822695035461" />
-        <entry key="..\:/AndroidStudioProjects/OpenRecipes/app/src/main/res/layout/search_activity.xml" value="0.2916666666666667" />
+        <entry key="..\:/AndroidStudioProjects/OpenRecipes/app/src/main/res/layout/itemrow.xml" value="0.5520833333333334" />
+        <entry key="..\:/AndroidStudioProjects/OpenRecipes/app/src/main/res/layout/search_activity.xml" value="0.33" />
       </map>
     </option>
   </component>
