@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">OpenRecipes</string>
+    <string name="error_retrieve_message">Error: cannot get recipe.</string>
+    <string name="menu_item_categories">Categories</string>
 </resources>
