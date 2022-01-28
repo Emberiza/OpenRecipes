@@ -21,9 +21,8 @@ private const val EXHAUSTED_TYPE = 4
 private const val INVALID_SOCIAL_RANK = -1F
 //private const val LOADING_TITLE = "LOADING..."
 private const val EXHAUSTED_TITLE = "Recepty došly :)"
-
+//mOnRecipeListener je velice dulezity kvuli EXHAUSTED_TYPE, zkouma klikani na artibuty coz se napriklad v pripade EXHAUSTED_TYPE nesmi stat
 class RecipeRecyclerView(
-    //mOnRecipeListener je velice dulezity kvuli EXHAUSTED_TYPE, zkouma klikani na artibuty coz se napriklad v pripade EXHAUSTED_TYPE nesmi stat
     private val mOnRecipeListener: ClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -31,14 +30,14 @@ class RecipeRecyclerView(
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view: View
-        //podle cisla viewType se RecyclerView inflatuje urcitym layoutem, ruznym pro vsechny typy
-        when (viewType)
-        {
-            //zobrazi podrobnosti o receptu, respektive obrazek, nazev, a ingredience
+        when (viewType) {
             RECIPE_TYPE -> {
                 view = LayoutInflater.from(viewGroup.context)
                     .inflate(R.layout.recipe_list, viewGroup, false)
-                return RecipeViewHolder(view, mOnRecipeListener)
+                return RecipeViewHolder(
+                    view,
+                    mOnRecipeListener
+                )
             }
 
 //            LOADING_TYPE -> {
@@ -49,27 +48,33 @@ class RecipeRecyclerView(
 //                )
 //            }
 
-            //zobrazi list kategorii
             CATEGORY_TYPE -> {
                 view = LayoutInflater.from(viewGroup.context)
                     .inflate(R.layout.category_list, viewGroup, false)
-                return CategoryViewHolder(view, mOnRecipeListener)
+                return CategoryViewHolder(
+                    view,
+                    mOnRecipeListener
+                )
             }
-            //vypise na konci seznamu ze uz vice receptu neni, bez tohoto by tam zustal prazdny recept, ktery by po kliknuti shodil aplikaci
+
             EXHAUSTED_TYPE -> {
                 view = LayoutInflater.from(viewGroup.context)
                     .inflate(R.layout.activity_end, viewGroup, false)
-                return SearchExhaustedViewHolder(view)
+                return SearchExhaustedViewHolder(
+                    view
+                )
             }
 
             else -> {
                 view = LayoutInflater.from(viewGroup.context)
                     .inflate(R.layout.recipe_list, viewGroup, false)
-                return RecipeViewHolder(view, mOnRecipeListener)
+                return RecipeViewHolder(
+                    view,
+                    mOnRecipeListener
+                )
             }
         }
     }
-
     override fun getItemCount(): Int {
         return if (!this::mRecipes.isInitialized) 0 else mRecipes.size
     }
