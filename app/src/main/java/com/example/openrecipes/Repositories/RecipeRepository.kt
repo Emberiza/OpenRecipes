@@ -18,19 +18,19 @@ class RecipeRepository private constructor() {
         initMediators()
     }
 
-    val recipes: LiveData<List<RecipeData>?>
+    val recipes: LiveData<List<RecipeData>?> //list receptu
         get() = mRecipes
 
-    val recipe: LiveData<RecipeData>
+    val recipe: LiveData<RecipeData> //jeden vybrany recept
         get() = recipeClient.recipe
 
-    val isRecipeRequestTimeOut: LiveData<Boolean>
+    val isRecipeRequestTimeOut: LiveData<Boolean> //boolean zda vyprsel cas na API query request
         get() = recipeClient.timeOut
 
-    val isQueryExhausted: LiveData<Boolean>
+    val isQueryExhausted: LiveData<Boolean> //boolean pokud dosly data ke zpracovani
         get() = mIsQueryExhausted
 
-    fun searchRecipeById(recipeID: String) {
+    fun searchRecipeById(recipeID: String) { //vyhledani podle ID
         recipeClient.searchRecipeByID(recipeID)
     }
 

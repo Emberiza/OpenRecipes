@@ -13,16 +13,17 @@ import com.example.openrecipes.Miscellaneous.Constants.DEFAULT_SEARCH_IMAGES
 import com.example.openrecipes.R
 import com.example.openrecipes.RecipeData
 
-
+//konstanty ruznych typu
 private const val RECIPE_TYPE = 1
 private const val LOADING_TYPE = 2
 private const val CATEGORY_TYPE = 3
 private const val EXHAUSTED_TYPE = 4
 private const val INVALID_SOCIAL_RANK = -1F
-private const val LOADING_TITLE = "LOADING..."
-private const val EXHAUSTED_TITLE = "EXHAUSTED..."
+//private const val LOADING_TITLE = "LOADING..."
+private const val EXHAUSTED_TITLE = "Recepty došly :)"
 
-class RecipeRecyclerAdapter(
+class RecipeRecyclerView(
+    //mOnRecipeListener je velice dulezity kvuli EXHAUSTED_TYPE, zkouma klikani na artibuty coz se napriklad v pripade EXHAUSTED_TYPE nesmi stat
     private val mOnRecipeListener: ClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -30,14 +31,14 @@ class RecipeRecyclerAdapter(
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view: View
-        when (viewType) {
+        //podle cisla viewType se RecyclerView inflatuje urcitym layoutem, ruznym pro vsechny typy
+        when (viewType)
+        {
+            //zobrazi podrobnosti o receptu, respektive obrazek, nazev, a ingredience
             RECIPE_TYPE -> {
                 view = LayoutInflater.from(viewGroup.context)
                     .inflate(R.layout.recipe_list, viewGroup, false)
-                return RecipeViewHolder(
-                    view,
-                    mOnRecipeListener
-                )
+                return RecipeViewHolder(view, mOnRecipeListener)
             }
 
 //            LOADING_TYPE -> {
@@ -48,30 +49,23 @@ class RecipeRecyclerAdapter(
 //                )
 //            }
 
+            //zobrazi list kategorii
             CATEGORY_TYPE -> {
                 view = LayoutInflater.from(viewGroup.context)
                     .inflate(R.layout.category_list, viewGroup, false)
-                return CategoryViewHolder(
-                    view,
-                    mOnRecipeListener
-                )
+                return CategoryViewHolder(view, mOnRecipeListener)
             }
-
-//            EXHAUSTED_TYPE -> {
-//                view = LayoutInflater.from(viewGroup.context)
-//                    .inflate(R.layout.layout_search_exhausted_list_item, viewGroup, false)
-//                return SearchExhaustedViewHolder(
-//                    view
-//                )
-//            }
+            //vypise na konci seznamu ze uz vice receptu neni, bez tohoto by tam zustal prazdny recept, ktery by po kliknuti shodil aplikaci
+            EXHAUSTED_TYPE -> {
+                view = LayoutInflater.from(viewGroup.context)
+                    .inflate(R.layout.activity_end, viewGroup, false)
+                return SearchExhaustedViewHolder(view)
+            }
 
             else -> {
                 view = LayoutInflater.from(viewGroup.context)
                     .inflate(R.layout.recipe_list, viewGroup, false)
-                return RecipeViewHolder(
-                    view,
-                    mOnRecipeListener
-                )
+                return RecipeViewHolder(view, mOnRecipeListener)
             }
         }
     }
@@ -80,14 +74,15 @@ class RecipeRecyclerAdapter(
         return if (!this::mRecipes.isInitialized) 0 else mRecipes.size
     }
 
+    //zaplni recyclerview kategoriema jidel za pomoci Glide pro obrazek
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val itemViewType = getItemViewType(position)
         if (itemViewType == RECIPE_TYPE && holder is RecipeViewHolder) {
             holder.title.text = mRecipes[position].title
             holder.publisher.text = mRecipes[position].publisher
-            holder.socialScore.text = this.mRecipes[position].social_rank.toString()
+//            holder.socialScore.text = this.mRecipes[position].social_rank.toString()
 
-            // set the image
+            //pomoci Glide nastavi obrazek receptu
             val options: RequestOptions =
                 RequestOptions().placeholder(R.drawable.ic_launcher_background)
 
@@ -96,8 +91,9 @@ class RecipeRecyclerAdapter(
                 .load(mRecipes[position].image_url)
                 .into(holder.image)
         } else if (itemViewType == CATEGORY_TYPE && holder is CategoryViewHolder) {
+            //zde jsem hardcodoval obrazek na prvni pozici Barbeque, chtel se mi misto nej ukazovat jen placeholder
             val options: RequestOptions =
-                RequestOptions().placeholder(R.drawable.ic_launcher_background)
+                RequestOptions().placeholder(R.drawable.barbeque)
             val path: Uri =
                 Uri.parse("android.resource://com.example.openrecipes/drawable/${mRecipes[position].image_url}")
             Glide.with(holder.itemView.context)
@@ -111,44 +107,29 @@ class RecipeRecyclerAdapter(
         }
     }
 
+    //funkce zjistujici ktery typ by mel byt zrovna zobrazen
     override fun getItemViewType(position: Int): Int {
 
         return if (mRecipes[position].social_rank == INVALID_SOCIAL_RANK) {
             CATEGORY_TYPE
-        } else if (mRecipes[position].title.equals(LOADING_TITLE)) {
-            LOADING_TYPE
         } else if (mRecipes[position].title.equals(EXHAUSTED_TITLE)) {
             EXHAUSTED_TYPE
-        } else if (position == mRecipes.size - 1 &&
-            position != 0 &&
-            !mRecipes[position].title.equals(EXHAUSTED_TITLE)
-        ) {
-            LOADING_TYPE
-        } else {
+        } else
+        {
             RECIPE_TYPE
         }
     }
+    //funkce pro observer v RecipeListActivity v pripade ze dojdou recepty
+    fun setQueryExhausted() {
+        RecipeData().apply {
+            title = EXHAUSTED_TITLE
+        }.also {
+            val list = mRecipes.toMutableList()
+            list.add(it)
+            mRecipes = list.toList()
+        }
+    }
 
-//    fun setQueryExhausted() {
-//        hideLoading()
-//        RecipeData().apply {
-//            title = EXHAUSTED_TITLE
-//        }.also {
-//            val list = mRecipes.toMutableList()
-//            list.add(it)
-//            mRecipes = list.toList()
-//        }
-//    }
-//
-//    fun displayLoading() {
-//        if (!isLoading()) {
-//            val recipe = RecipeData(LOADING_TITLE)
-//            val loadingList: MutableList<RecipeData> = ArrayList()
-//            loadingList.add(recipe)
-//            mRecipes = loadingList
-//            notifyDataSetChanged()
-//        }
-//    }
 
     fun displaySearchCategories() {
         val categories = mutableListOf<RecipeData>()
@@ -164,26 +145,6 @@ class RecipeRecyclerAdapter(
         notifyDataSetChanged()
     }
 
-//    private fun isLoading(): Boolean {
-//        if (this::mRecipes.isInitialized && mRecipes.isNotEmpty()) {
-//            if (mRecipes[mRecipes.size - 1].title.equals(LOADING_TITLE)) {
-//                return true
-//            }
-//        }
-//        return false
-//    }
-//
-//    private fun hideLoading() {
-//        if(isLoading()) {
-//            val mutableList = mRecipes.toMutableList()
-//            for (recipe in mRecipes)
-//                if (recipe.title.equals(LOADING_TITLE)) {
-//                    mutableList.remove(recipe)
-//                }
-//            mRecipes = mutableList.toList()
-//        }
-//        notifyDataSetChanged()
-//    }
 
     fun setRecipes(mRecipes: List<RecipeData>?) {
         mRecipes?.let {

@@ -17,6 +17,7 @@ import com.example.openrecipes.RecipeData
 import com.example.openrecipes.ViewModels.RecipeViewModel
 
 class RecipeActivity : AbstractActivity() {
+    //inicializace promennych
     private lateinit var mRecipeImage: AppCompatImageView
     private lateinit var mRecipeTitle: TextView
     private lateinit var mRecipeRank: TextView
@@ -27,12 +28,13 @@ class RecipeActivity : AbstractActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe)
+        //pripojeni promennych na komponenty layoutu activity_recipe
         mRecipeImage = findViewById(R.id.recipe_image)
         mRecipeTitle = findViewById(R.id.recipe_title)
         mRecipeRank = findViewById(R.id.recipe_social_score)
         mRecipeIngredientsContainer = findViewById(R.id.ingredients_container)
         mScrollView = findViewById(R.id.parent)
-
+        //inicializace ViewModelu ze souboru RecipeViewModel
         mRecipeViewModel = ViewModelProvider(this).get(RecipeViewModel::class.java)
 //        showProgressBar(true)
         subscribeObservers()
@@ -49,7 +51,8 @@ class RecipeActivity : AbstractActivity() {
         }
     }
 
-    private fun subscribeObservers() {
+    private fun subscribeObservers() //Observer zjistuje dostupnost kliknuteho receptu, pokud vse sedi zacne setRecipeProperties(), vyprsi cas na API Query Request (tudiz chyba typu recept neexistuje/API nefunkcni) zacne displayErrorScreen()
+    {
         mRecipeViewModel.recipes.observe(
             this,
             Observer { recipe ->
@@ -72,7 +75,8 @@ class RecipeActivity : AbstractActivity() {
         )
     }
 
-    private fun displayErrorScreen(errorMessage: String)  {
+    private fun displayErrorScreen(errorMessage: String)  //v pripade ze Observer zjisti, ze nelze ziskat recept, vyhodi chybovou hlasku
+    {
         mRecipeTitle.text = getString(R.string.error_retrieve_message)
         mRecipeRank.text = ""
         TextView(this).apply {
@@ -96,19 +100,20 @@ class RecipeActivity : AbstractActivity() {
             .into(mRecipeImage)
 
         showParent()
-        showProgressBar(false)
+//        showProgressBar(false)
         mRecipeViewModel.mDidRetrieveRecipe = true
     }
 
     private fun setRecipeProperties(recipe: RecipeData) {
-        Glide.with(this)
+        Glide.with(this)  //pomoci Glide ziskame obrazek receptu
             .setDefaultRequestOptions(RequestOptions().placeholder(R.drawable.ic_launcher_background))
             .load(recipe.image_url)
             .into(mRecipeImage)
 
-        mRecipeTitle.text = recipe.title
-        mRecipeRank.text = recipe.social_rank.toString()
-        for (ingredients in recipe.ingredients!!) {
+        mRecipeTitle.text = recipe.title    //ziskame jmeno receptu
+//        mRecipeRank.text = recipe.social_rank.toString()
+        for (ingredients in recipe.ingredients!!)   //pro kazdou ingredienci se ji zaplni radek
+        {
             TextView(this).apply {
                 text = ingredients
                 textSize = 15F
@@ -122,14 +127,14 @@ class RecipeActivity : AbstractActivity() {
         }
 
         showParent()
-        showProgressBar(false)
+//        showProgressBar(false)
     }
 
-    private fun showParent() {
+    private fun showParent() { //defaultne je hodnota visibility=gone (hodnota 2, kompletne schovana), v pripade inicializace se prepne na visible (0)
         mScrollView.visibility = View.VISIBLE
     }
 
-    companion object {
+    companion object { //deklarace konstanty
         const val RECIPE_INTENT = "recipe"
     }
 }

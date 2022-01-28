@@ -18,24 +18,25 @@ class RecipeApiClient private constructor() {
     private val mRecipes: MutableLiveData<List<RecipeData>?> = MutableLiveData()
     private val mRecipe: MutableLiveData<RecipeData> = MutableLiveData()
     private val mRecipeRequestTimeOut: MutableLiveData<Boolean> = MutableLiveData()
-    val recipes: LiveData<List<RecipeData>?>
+    val recipes: LiveData<List<RecipeData>?> //list pro vice receptu
         get() = mRecipes
-    val recipe: LiveData<RecipeData>
+    val recipe: LiveData<RecipeData> //pro jeden recept
         get() = mRecipe
-    val timeOut: LiveData<Boolean>
+    val timeOut: LiveData<Boolean> //inicializace boolean zda vyprsel cas k ziskani receptu
         get() = mRecipeRequestTimeOut
 
-    private lateinit var mRetrieveRecipesRunnable: RetrieveRecipesRunnable
+    private lateinit var mRetrieveRecipesRunnable: RetrieveRecipesRunnable //inicializace funkci
     private lateinit var mRetrieveRecipeRunnable: RetrieveRecipeRunnable
 
-    fun searchRecipesApi(query: String, pageNumber: Int) {
+    fun searchRecipesApi(query: String, pageNumber: Int)
+    {
         mRetrieveRecipesRunnable = RetrieveRecipesRunnable(query, pageNumber)
         val handler: Future<*> =
             Executor.instance.networkIO().submit(mRetrieveRecipesRunnable)
 
-        // Set a timeout for the data refresh
+        // nastavi timeout pro aktualizaci dat
         Executor.instance.networkIO().schedule(
-            { // let the user know it timed out
+            { //da uzivateli vedet ze byl timeout
                 mRecipeRequestTimeOut.postValue(true)
                 handler.cancel(true)
             },
@@ -43,7 +44,7 @@ class RecipeApiClient private constructor() {
         )
     }
 
-    fun searchRecipeByID(recipeID: String) {
+    fun searchRecipeByID(recipeID: String) { //vyhleda recept podle jeho ID
         mRetrieveRecipeRunnable = RetrieveRecipeRunnable(recipeID)
         val handler: Future<*> =
             Executor.instance.networkIO().submit(mRetrieveRecipeRunnable)
@@ -58,7 +59,7 @@ class RecipeApiClient private constructor() {
             TIMEOUT.toLong(), TimeUnit.MILLISECONDS
         )
     }
-
+    //zavolani teto funkce by zrusilo probihajici procesy
     fun cancelRequest() {
         if (this::mRetrieveRecipesRunnable.isInitialized) {
             mRetrieveRecipesRunnable.cancelRequest()
@@ -78,18 +79,20 @@ class RecipeApiClient private constructor() {
         private var cancelRequest = false
 
         override fun run() {
+            //try catch pokud vubec dostaneme odpoved, pokud ne vyhodi error "cannot @GET"
             try {
-                val response: Response<RecipeSearchGet> =
-                    getRecipes(query, pageNumber).execute()
+                val response: Response<RecipeSearchGet> = getRecipes(query, pageNumber).execute()
+                //pokud by boolean cancelRequest byl true, funkce se ukonci
                 if (cancelRequest) {
                     return
                 }
+                //pokud response.code() bude 200 (coz HTTP znamena OK), pokracuje se dal, kde vytvorime val list ktery naplnime lifedaty z receptu, pokud ne tak dalsi ERROR
                 if (response.code() == 200) {
-
                     val list = response.body()?.recipes
+                    //pokud dostaneme pageNumber 1, vime ze jsme na zacatku a muzeme zaplnit mRecipes celym listem dat
                     if (pageNumber == 1) {
                         mRecipes.postValue(list)
-                    } else {
+                    } else { //pokud ne, vyuzijeme kotlinskeho also, kterym vytvorime mutableList, ktery opet zaplnime daty z @GET
                         list?.also {
                             val currentRecipes =
                                 mRecipes.value?.toMutableList()
@@ -109,17 +112,14 @@ class RecipeApiClient private constructor() {
             }
         }
 
-        private fun getRecipes(
-            query: String,
-            pageNumber: Int
-        ): Call<RecipeSearchGet> {
+        private fun getRecipes(query: String, pageNumber: Int): Call<RecipeSearchGet> { //zavolama funkci RecipeSearchGet, ktera za pomoci parametry vyhleda query a cislo stranky prevedene na String
             return RetrofitBuild.recipeApiInterface.searchRecipe(
                 Constants.API_KEY,
                 query, pageNumber.toString()
             )
         }
 
-        fun cancelRequest() {
+        fun cancelRequest() { //funkce vypisujici zpravu v pripade zruseni procesu
             Log.d(
                 TAG,
                 "cancelRequest: canceling the retrieval query"
@@ -128,6 +128,7 @@ class RecipeApiClient private constructor() {
         }
     }
 
+    //tato trida je velice podobna predchozi, tentokrat ale bere data jednotlivych receptu a ne listu receptu a tudiz je kratsi a mene narocna, ovsem porad obsahuje osetreni try catch a zjistovani HTTP kodu
     private inner class RetrieveRecipeRunnable(
         private val recipeID: String
     ) :
@@ -142,7 +143,6 @@ class RecipeApiClient private constructor() {
                     return
                 }
                 if (response.code() == 200) {
-
                     val recipe = response.body()?.recipe
                     mRecipe.postValue(recipe)
                 } else {
@@ -157,19 +157,8 @@ class RecipeApiClient private constructor() {
             }
         }
 
-        private fun getRecipes(
-            query: String,
-            pageNumber: Int
-        ): Call<RecipeSearchGet> {
-            return RetrofitBuild.recipeApiInterface.searchRecipe(
-                Constants.API_KEY,
-                query, pageNumber.toString()
-            )
-        }
-
-        private fun getRecipe(
-            recipeID: String
-        ): Call<RecipeGet> {
+        //ekvivalent getRecipes(), kde pouze hledame ID receptu
+        private fun getRecipe(recipeID: String): Call<RecipeGet> {
             return RetrofitBuild.recipeApiInterface.getRecipe(
                 Constants.API_KEY,
                 recipeID

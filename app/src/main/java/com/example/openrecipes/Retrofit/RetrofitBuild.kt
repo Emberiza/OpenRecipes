@@ -4,7 +4,7 @@ import com.example.openrecipes.Miscellaneous.Constants.API_URL
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object RetrofitBuild {
+object RetrofitBuild { //doporuceny zpusob implementace RecipeApiInterface z Gson dat ziskanych z API
     val recipeApiInterface: RecipeApiInterface by lazy {
         Retrofit.Builder()
             .baseUrl(API_URL)

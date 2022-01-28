@@ -14,22 +14,24 @@ import com.example.openrecipes.Adapters.ClickListener
 import com.example.openrecipes.Miscellaneous.Testing
 import com.example.openrecipes.R
 import com.example.openrecipes.ViewModels.RecipeListViewModel
-import com.example.openrecipes.adapters.RecipeRecyclerAdapter
+import com.example.openrecipes.adapters.RecipeRecyclerView
+
 
 class RecipeListActivity : AbstractActivity(), ClickListener {
+    //inicializace promennych
     private lateinit var searchView: SearchView
     private lateinit var mRecipeListViewModel: RecipeListViewModel
     private lateinit var mRecyclerView: RecyclerView
-    private lateinit var mAdapter: RecipeRecyclerAdapter
+    private lateinit var mAdapter: RecipeRecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe_list)
-
+        //pripojeni promennych na komponenty layoutu activity_recipe_list, a ViewModelu ze souboru RecipeListViewModel
         searchView = findViewById(R.id.search_view)
         mRecyclerView = findViewById(R.id.recipe_list)
         mRecipeListViewModel = ViewModelProvider(this)[RecipeListViewModel::class.java]
-
+        //inicializace funkci
         initRecyclerView()
         initSearchView()
         subscribeObservers()
@@ -39,7 +41,7 @@ class RecipeListActivity : AbstractActivity(), ClickListener {
         setSupportActionBar(findViewById(R.id.toolbar))
     }
 
-    private fun subscribeObservers() {
+    private fun subscribeObservers() { //observer
         mRecipeListViewModel.recipes
             .observe(
                 this,
@@ -58,13 +60,13 @@ class RecipeListActivity : AbstractActivity(), ClickListener {
             .observe(
                 this,
                 Observer {
-//                    mAdapter.setQueryExhausted()
+                    mAdapter.setQueryExhausted()
                 }
             )
     }
 
     private fun initRecyclerView() {
-        mAdapter = RecipeRecyclerAdapter(this)
+        mAdapter = RecipeRecyclerView(this)
         mRecyclerView.adapter = mAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(this)
 //        mRecyclerView.addItemDecoration(VerticalSpacingDecorator(30))

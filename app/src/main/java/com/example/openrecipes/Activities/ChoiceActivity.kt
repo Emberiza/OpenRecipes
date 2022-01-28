@@ -7,7 +7,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.example.openrecipes.R
 
-class ChoiceActivity : AppCompatActivity() {
+class ChoiceActivity : AppCompatActivity() { //tato aktivita slouzi k vybrani mezi prochazenim novych receptu, ci prochazenim receptu ulozenych v Room
     lateinit var search: Button
     lateinit var saved: Button
     override fun onCreate(savedInstanceState: Bundle?) {

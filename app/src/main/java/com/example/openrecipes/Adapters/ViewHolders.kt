@@ -31,7 +31,7 @@ class RecipeViewHolder(itemView: View, private val onRecipeListener: ClickListen
     RecyclerView.ViewHolder(itemView), View.OnClickListener {
     var title: TextView = itemView.findViewById(R.id.recipe_title)
     var publisher: TextView = itemView.findViewById(R.id.recipe_publisher)
-    var socialScore: TextView = itemView.findViewById(R.id.recipe_social_score)
+    var socialScore: TextView = itemView.findViewById(R.id.recipe_social_score) //zvlastni api hodnota, ktera mi neprisla potrebna
     var image: AppCompatImageView = itemView.findViewById(R.id.recipe_image)
 
     init {
