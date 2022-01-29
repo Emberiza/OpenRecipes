@@ -7,7 +7,11 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.example.openrecipes.R
 
-class ChoiceActivity : AppCompatActivity() { //tato aktivita slouzi k vybrani mezi prochazenim novych receptu, ci prochazenim receptu ulozenych v Room
+
+//tato aktivita puvodne mela nastat po splashscreenu, a mela by vyber mezi zobrazovanim receptu z API, ci z databaze
+//nejsem za boha schopen vytvorit Room databazi, ktera by byla funkcni, proto je tato aktivita nepouzita
+
+class ChoiceActivity : AppCompatActivity() {
     lateinit var search: Button
     lateinit var saved: Button
     override fun onCreate(savedInstanceState: Bundle?) {

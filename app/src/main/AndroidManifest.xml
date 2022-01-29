@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
-            android:name=".Activities.ChoiceActivity"
+            android:name=".Activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,7 @@
         <activity android:name=".Activities.AbstractActivity" />
         <activity android:name=".Activities.RecipeActivity" />
         <activity android:name=".Activities.RecipeListActivity" />
-<!--        <activity android:name=".Activities.ChoiceActivity" />-->
+        <activity android:name=".Activities.ChoiceActivity" />
 
 
 

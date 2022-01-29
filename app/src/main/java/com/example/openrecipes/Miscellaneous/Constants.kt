@@ -9,7 +9,9 @@ object Constants {
         const val API_URL = "https://recipesapi.herokuapp.com"
         const val API_KEY = ""
         const val TIMEOUT = "5000"
+        //nazvy kategorii
         val DEFAULT_SEARCH = arrayOf("Barbecue", "Breakfast", "Chicken", "Beef", "Brunch", "Dinner", "Wine", "Italian");
+        //nazvy obrazku katerogii ulozenych v /res/drawable
         val DEFAULT_SEARCH_IMAGES  = arrayOf("barbecue", "breakfast", "chicken", "beef", "brunch", "dinner", "wine", "italian");
 
 

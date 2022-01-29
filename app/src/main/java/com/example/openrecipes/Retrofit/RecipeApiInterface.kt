@@ -12,7 +12,7 @@ interface RecipeApiInterface {
         @Query("q") query:String,
         @Query("page") page:String,
     ): Call<RecipeSearchGet>
-    //zavolaji si pomocne tridy RecipeSearchGet a RecipeGet, ktere jsou ulozene ve svych samostatnych souborech
+    //pomocne tridy RecipeSearchGet a RecipeGet jsou ulozene ve svych samostatnych souborech
     @GET("api/get")
     fun getRecipe(
             @Query("key") key:String,

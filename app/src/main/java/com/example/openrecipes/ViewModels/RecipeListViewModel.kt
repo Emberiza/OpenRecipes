@@ -3,6 +3,7 @@ package com.example.openrecipes.ViewModels
 import androidx.lifecycle.ViewModel
 import com.example.openrecipes.Repositories.RecipeRepository
 
+//viewmodel pro seznam receptu
 class RecipeListViewModel : ViewModel() {
     var isViewingRecipes = false
     var isPerformingQuery = false

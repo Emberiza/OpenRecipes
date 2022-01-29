@@ -1,8 +1,13 @@
 package com.example.openrecipes.ViewModels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.openrecipes.RecipeData
 import com.example.openrecipes.Repositories.RecipeRepository
+import kotlinx.coroutines.launch
+import com.example.openrecipes.Database.RecipeDao
 
+//viewmodel pro jednotlive recepty
 class RecipeViewModel : ViewModel() {
     private val mRecipeRepository: RecipeRepository by lazy {
         RecipeRepository.instance
@@ -20,4 +25,5 @@ class RecipeViewModel : ViewModel() {
         this.recipeId = recipeId
         mRecipeRepository.searchRecipeById(recipeId)
     }
+
 }

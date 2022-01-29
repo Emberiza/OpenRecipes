@@ -3,6 +3,7 @@ package com.example.openrecipes.Repositories
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.openrecipes.Database.RecipeDatabase
 import com.example.openrecipes.RecipeData
 import com.example.openrecipes.Retrofit.RecipeApiClient
 
@@ -13,6 +14,7 @@ class RecipeRepository private constructor() {
     var mPageNumber: Int = 0
     private val mIsQueryExhausted: MutableLiveData<Boolean> = MutableLiveData()
     private val mRecipes: MediatorLiveData<List<RecipeData>> = MediatorLiveData()
+
 
     init {
         initMediators()
@@ -34,6 +36,7 @@ class RecipeRepository private constructor() {
         recipeClient.searchRecipeByID(recipeID)
     }
 
+    //vyhledavani zkrze API
     fun searchRecipesApi(query: String, pageNumber: Int) {
         var number = pageNumber
         if (number == 0) {
@@ -53,6 +56,7 @@ class RecipeRepository private constructor() {
         recipeClient.cancelRequest()
     }
 
+    //urcuje cim bude list receptu vyplnen
     private fun initMediators() {
         val recipeListApiSource = recipeClient.recipes
         mRecipes.addSource(recipeListApiSource) { recipes ->
@@ -60,12 +64,13 @@ class RecipeRepository private constructor() {
                 mRecipes.value = it
                 doneQuery(it)
             } ?: run {
-                // search database cache
                 doneQuery(null)
             }
         }
     }
 
+
+    //pokud jsme se dostali na konec listu dat
     private fun doneQuery(list: List<RecipeData>?) {
         mIsQueryExhausted.value = list == null || list.size % 30 != 0
     }

@@ -9,6 +9,8 @@ import de.hdodenhof.circleimageview.CircleImageView
 
 class ViewHolders {
 }
+
+//viewholdery pro recyclerview, jeden pro kategorie, druhy pro samotny recept
 class CategoryViewHolder(itemView: View, private val mOnRecipeListener: ClickListener) :
     RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
@@ -31,7 +33,7 @@ class RecipeViewHolder(itemView: View, private val onRecipeListener: ClickListen
     RecyclerView.ViewHolder(itemView), View.OnClickListener {
     var title: TextView = itemView.findViewById(R.id.recipe_title)
     var publisher: TextView = itemView.findViewById(R.id.recipe_publisher)
-    var socialScore: TextView = itemView.findViewById(R.id.recipe_social_score) //zvlastni api hodnota, ktera mi neprisla potrebna
+//    var socialScore: TextView = itemView.findViewById(R.id.recipe_social_score) //zvlastni api hodnota, ktera mi neprisla potrebna, tudiz jsem s ni prilis nepracoval
     var image: AppCompatImageView = itemView.findViewById(R.id.recipe_image)
 
     init {

@@ -11,12 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.openrecipes.Activities.RecipeActivity.Companion.RECIPE_INTENT
 import com.example.openrecipes.Adapters.ClickListener
-import com.example.openrecipes.Miscellaneous.Testing
 import com.example.openrecipes.R
 import com.example.openrecipes.ViewModels.RecipeListViewModel
 import com.example.openrecipes.adapters.RecipeRecyclerView
 
-
+//aktivita resici list ruznych receptu, ziskanych z API
 class RecipeListActivity : AbstractActivity(), ClickListener {
     //inicializace promennych
     private lateinit var searchView: SearchView
@@ -48,7 +47,6 @@ class RecipeListActivity : AbstractActivity(), ClickListener {
                 Observer { recipeList ->
                     recipeList?.let {
                         if (mRecipeListViewModel.isViewingRecipes) {
-                            Testing.printRecipes("network test", recipeList)
                             mRecipeListViewModel.isPerformingQuery = false
                             mAdapter.setRecipes(recipeList)
                         }
@@ -65,6 +63,7 @@ class RecipeListActivity : AbstractActivity(), ClickListener {
             )
     }
 
+    //inicializace RecyclerView, ktery je naplnen recepty a da se v nem scrollovat
     private fun initRecyclerView() {
         mAdapter = RecipeRecyclerView(this)
         mRecyclerView.adapter = mAdapter
@@ -79,28 +78,23 @@ class RecipeListActivity : AbstractActivity(), ClickListener {
             }
         })
     }
-
+    //inicializace horniho vyhledavani
     private fun initSearchView() {
         findViewById<SearchView>(R.id.search_view).apply {
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-
-//                    mAdapter.displayLoading()
                     searchView.clearFocus()
-                    // Search the database for a recipe
                     query?.let { mRecipeListViewModel.searchRecipes(it, 1) }
                     return false
                 }
-
                 override fun onQueryTextChange(query: String?): Boolean {
-
-                    // Wait for the user to submit the search. So do nothing here.
                     return false
                 }
             })
         }
     }
 
+    //prechod na RecipeActivity urciteho receptu na ktery jsme kliknuli
     override fun onRecipeClick(position: Int) {
         Intent(this, RecipeActivity::class.java).apply {
             putExtra(RECIPE_INTENT, mAdapter.getSelectedRecipe(position))
@@ -120,6 +114,7 @@ class RecipeListActivity : AbstractActivity(), ClickListener {
         mAdapter.displaySearchCategories()
     }
 
+    //vraceni se zpet na kategorie, bez tohoto bychom se vraceli na splashscreen
     override fun onBackPressed() {
         if (mRecipeListViewModel.onBackPressed()) {
             super.onBackPressed()
@@ -127,14 +122,14 @@ class RecipeListActivity : AbstractActivity(), ClickListener {
             displaySearchCategories()
         }
     }
-
+    //zobrazi vybranou kategorii
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_categories -> displaySearchCategories()
         }
         return super.onOptionsItemSelected(item)
     }
-
+    //inicializuje search menu
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.search_menu, menu)
         return super.onCreateOptionsMenu(menu)

@@ -15,6 +15,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.openrecipes.R
 import com.example.openrecipes.RecipeData
 import com.example.openrecipes.ViewModels.RecipeViewModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class RecipeActivity : AbstractActivity() {
     //inicializace promennych
@@ -24,23 +25,28 @@ class RecipeActivity : AbstractActivity() {
     private lateinit var mRecipeIngredientsContainer: LinearLayout
     private lateinit var mScrollView: ScrollView
     private lateinit var mRecipeViewModel: RecipeViewModel
+    private lateinit var mFab: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe)
+
         //pripojeni promennych na komponenty layoutu activity_recipe
         mRecipeImage = findViewById(R.id.recipe_image)
+
         mRecipeTitle = findViewById(R.id.recipe_title)
-        mRecipeRank = findViewById(R.id.recipe_social_score)
+
+//        mRecipeRank = findViewById(R.id.recipe_social_score)
+
         mRecipeIngredientsContainer = findViewById(R.id.ingredients_container)
         mScrollView = findViewById(R.id.parent)
         //inicializace ViewModelu ze souboru RecipeViewModel
         mRecipeViewModel = ViewModelProvider(this).get(RecipeViewModel::class.java)
-//        showProgressBar(true)
         subscribeObservers()
         getIncomingIntent()
-    }
 
+    }
+    //zjisti ktery recept chceme zobrazit
     private fun getIncomingIntent() {
         if (intent.hasExtra(RECIPE_INTENT)) {
             intent.getParcelableExtra<RecipeData>(
@@ -100,10 +106,9 @@ class RecipeActivity : AbstractActivity() {
             .into(mRecipeImage)
 
         showParent()
-//        showProgressBar(false)
         mRecipeViewModel.mDidRetrieveRecipe = true
     }
-
+    //zobrazi veskere atributy vybraneho receptu
     private fun setRecipeProperties(recipe: RecipeData) {
         Glide.with(this)  //pomoci Glide ziskame obrazek receptu
             .setDefaultRequestOptions(RequestOptions().placeholder(R.drawable.ic_launcher_background))
@@ -127,7 +132,6 @@ class RecipeActivity : AbstractActivity() {
         }
 
         showParent()
-//        showProgressBar(false)
     }
 
     private fun showParent() { //defaultne je hodnota visibility=gone (hodnota 2, kompletne schovana), v pripade inicializace se prepne na visible (0)
@@ -137,4 +141,6 @@ class RecipeActivity : AbstractActivity() {
     companion object { //deklarace konstanty
         const val RECIPE_INTENT = "recipe"
     }
+
+
 }

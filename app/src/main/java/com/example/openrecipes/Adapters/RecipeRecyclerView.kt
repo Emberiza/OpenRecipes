@@ -15,19 +15,18 @@ import com.example.openrecipes.RecipeData
 
 //konstanty ruznych typu
 private const val RECIPE_TYPE = 1
-private const val LOADING_TYPE = 2
-private const val CATEGORY_TYPE = 3
-private const val EXHAUSTED_TYPE = 4
+private const val CATEGORY_TYPE = 2
+private const val EXHAUSTED_TYPE = 3
 private const val INVALID_SOCIAL_RANK = -1F
-//private const val LOADING_TITLE = "LOADING..."
 private const val EXHAUSTED_TITLE = "Recepty došly :)"
+
 //mOnRecipeListener je velice dulezity kvuli EXHAUSTED_TYPE, zkouma klikani na artibuty coz se napriklad v pripade EXHAUSTED_TYPE nesmi stat
 class RecipeRecyclerView(
     private val mOnRecipeListener: ClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private lateinit var mRecipes: List<RecipeData>
-
+    //vyplni view podle typu
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view: View
         when (viewType) {
@@ -40,13 +39,6 @@ class RecipeRecyclerView(
                 )
             }
 
-//            LOADING_TYPE -> {
-//                view = LayoutInflater.from(viewGroup.context)
-//                    .inflate(R.layout.layout_loading_list_item, viewGroup, false)
-//                return LoadingViewHolder(
-//                    view
-//                )
-//            }
 
             CATEGORY_TYPE -> {
                 view = LayoutInflater.from(viewGroup.context)
@@ -135,7 +127,7 @@ class RecipeRecyclerView(
         }
     }
 
-
+    //zobrazuje kategorie z konstant
     fun displaySearchCategories() {
         val categories = mutableListOf<RecipeData>()
         for ((index, categoryString) in DEFAULT_SEARCH.withIndex()) {
@@ -150,14 +142,14 @@ class RecipeRecyclerView(
         notifyDataSetChanged()
     }
 
-
+    //zobrazi list receptu
     fun setRecipes(mRecipes: List<RecipeData>?) {
         mRecipes?.let {
             this.mRecipes = mRecipes
             notifyDataSetChanged()
         }
     }
-
+    //vybrany recept
     fun getSelectedRecipe(position: Int): RecipeData? {
         return mRecipes.let {
             if (it.isNotEmpty()) mRecipes[position] else null
