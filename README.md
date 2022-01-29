@@ -21,6 +21,9 @@ Databázové soubory, kterými jsem toto chtěl dělat jsem v projektu nechal, k
 Doufám, že toto neinvaliduje celý projekt, samozřejmě očekávám horší známku.
 
 NOTES:
+
+Veškerý kód je okomentován.
+
 Největším problémem ve vytvoření aplikace byl Kotlin a Retrofit. 
 Nad Retrofitem jsem strávil moc času, naštěstí nakonec za pomoci MVVM architektury se začali vypisovat data tak, jak jsem chtěl.
 Kotlin je ovšem zlo. Na bakaláři v Jihlavě jsme dělali v Javě, tudíž jsem se ho musel učit od nuly, a není to velmi příjemný jazyk.
