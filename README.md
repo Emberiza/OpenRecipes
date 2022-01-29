@@ -2,7 +2,9 @@
 semestrální práce AK7MT
 
 Aplikace zaměřená na prohlížení si receptů a jejich ingrediencí z API.
+
 Požadavky:
+
 ☑ zdrojové kódy přístupné v nějakém verzovacím systému (GIT) - vše zde
 
 ☑ vlastní ikona aplikace, vlastní splashscreen - obojí custom made o mé Máti, která zrovna dostala od firmy tablet :)
