@@ -31,3 +31,5 @@ Kotlin je ovšem zlo. Na bakaláři v Jihlavě jsme dělali v Javě, tudíž jse
 OBČASNĚ (respektive poslední dobou často) se objeví bug, kdy při buildu soubor RecipeListActivity.kt hlásí špatnou referenci na RecipeRecyclerView. 
 Mám pocit, že je to z důvodu, že adresáře projektu jsem nazíval s velkým prvním písmenem. 
 Bug se vyřeší použitím funkce "Clean Project" pod záložkou "Build".
+
+Aplikace jede krásně i na fyzickém telefonu, nainstaloval jsem si ji na svůj Samsung Galaxy S21 Ultra
